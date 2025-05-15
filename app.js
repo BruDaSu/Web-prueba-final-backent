@@ -97,5 +97,54 @@ app.post('/submit', async (req, res) => {
         res.status(500).json({message: 'Error al guardar'});
     }
 });
-
+/**
+ * @swagger
+ * /personas:
+ *   get:
+ *     summary: Obtiene todas las personas registradas en la agenda
+ *     responses:
+ *       200:
+ *         description: Lista completa de personas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   dni:
+ *                     type: string
+ *                     example: "12345678"
+ *                   celular:
+ *                     type: string
+ *                     example: "987654321"
+ *                   nombre:
+ *                     type: string
+ *                     example: "Juan"
+ *                   apellidos:
+ *                     type: string
+ *                     example: "Pérez Gómez"
+ *                   fechaNacimiento:
+ *                     type: string
+ *                     example: "2000-01-01"
+ *                   departamento:
+ *                     type: string
+ *                     example: "Lima"
+ *                   distrito:
+ *                     type: string
+ *                     example: "Miraflores"
+ *                   observaciones:
+ *                     type: string
+ *                     example: "Cliente frecuente"
+ *       400:
+ *         description: Error al listar las personas
+ */
+app.get('/personas', async (req, res) => {
+  try {
+    const listadoPersonas = await Person.find();
+    res.status(200).json(listadoPersonas);
+  } catch (err) {
+    res.status(400).json({ message: 'Error al listar las personas' });
+  }
+});
 app.listen(4610);
