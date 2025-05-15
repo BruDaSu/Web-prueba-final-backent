@@ -31,6 +31,9 @@ const swaggerOptions = {
         },
         servers: [
             {
+                url: 'https://web-prueba-final-backent-production.up.railway.app'
+            },
+            {
                 url: 'http://localhost:4610'
             }
         ]
