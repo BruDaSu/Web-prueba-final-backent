@@ -16,9 +16,16 @@ app.use(cors());
 const MONGO_URI = process.env.MONGO_URI;
 
 console.log('MONGO_URI:', MONGO_URI);
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('Mongo conectado'))
-  .catch(err => console.error('Error conectado Mongo', err));
+mongoose.connect(MONGO_URI).then(() => {
+    console.log('Se conecto exitosamente');
+    const PORT = process.env.PORT || 4435;
+    app.listen(PORT, () => {
+        console.log(`El servidor se ejecuta en el puerto ${PORT}`);
+    });
+}).catch((err) => {
+    console.log('Error encontrado ', err);
+});
+
 
 const swaggerOptions = {
     definition: {
@@ -107,8 +114,8 @@ app.get('/persons', async (req, res) => {
 });
 
 
-const PORT = process.env.PORT || 4610;
+const PORT = process.env.PORT || 4416;
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
+    console.log(`El servidor se ejecuta en el puerto ${PORT}`);
 });
