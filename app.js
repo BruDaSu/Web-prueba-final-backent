@@ -8,25 +8,19 @@ const swaggerUI = require('swagger-ui-express');
 
 const app = express();
 
-// Middlewares
+
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
 
-// Variables de entorno
 const MONGO_URI = process.env.MONGO_URI;
-const PORT = process.env.PORT || 4610;
 
-// Conexión a MongoDB
-mongoose.connect(MONGO_URI)
-    .then(() => {
-        console.log("✅ Conexión a MongoDB exitosa");
-    })
-    .catch((err) => {
-        console.error("❌ Error conectando a MongoDB:", err);
-    });
+mongoose.connect(MONGO_URI).then(()=>{
+    console.log("Se conecto exitosamente");
+}).catch((err)=>{
+    console.error("Error encontrado", err);
+});
 
-// Configuración de Swagger
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
@@ -37,10 +31,10 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: 'https://web-prueba-final-backent-production.up.railway.app' // Railway
+                url: 'https://web-prueba-final-backent-production.up.railway.app'
             },
             {
-                url: `http://localhost:${PORT}` // Localhost
+                url: 'http://localhost:4610'
             }
         ]
     },
@@ -64,38 +58,44 @@ app.use('/api-docs1', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
  *             properties:
  *               dni:
  *                 type: string
+ *                 
  *               celular:
  *                 type: string
+ *                 
  *               nombre:
  *                 type: string
+ *                 
  *               apellidos:
  *                 type: string
+ *                 
  *               fechaNacimiento:
  *                 type: string
+ *                 
  *               departamento:
  *                 type: string
+ *                 
  *               distrito:
  *                 type: string
+ *                 
  *               observaciones:
  *                 type: string
+ *                 
  *     responses:
  *       200:
  *         description: Persona registrada correctamente
  *       500:
  *         description: Error al registrar la persona
  */
+
 app.post('/submit', async (req, res) => {
-    try {
+    try{
         const person = new Person(req.body);
         await person.save();
-        res.status(200).json({ message: '✅ Persona guardada correctamente' });
-    } catch (err) {
-        console.error('❌ Error al guardar:', err);
-        res.status(500).json({ message: 'Error al guardar' });
+        res.status(200).json({message: 'Se guardo correctamente'});
+    }catch(err){
+        console.error(err);
+        res.status(500).json({message: 'Error al guardar'});
     }
 });
 
-// Inicio del servidor
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor ejecutándose en http://localhost:${PORT}`);
-});
+app.listen(4610);
