@@ -98,15 +98,6 @@ app.post('/submit', async (req, res) => {
     }
 });
 
-app.get('/persons', async (req, res) => {
-  try {
-    const persons = await Person.find();
-    res.status(200).json(persons);       
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error al obtener las personas' });
-  }
-});
 
 const PORT = process.env.PORT || 4610;
 
