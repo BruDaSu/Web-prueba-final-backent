@@ -20,7 +20,9 @@ const swaggerOptions = {
             {
                 url: 'http://localhost:4610',
             },
-            // Puedes agregar aquí tu URL en Railway u otro hosting
+            {
+                url: 'https://web-prueba-final-backent-production.up.railway.app',
+            }
         ],
     },
     apis: ['./app.js'], // Aquí le dices que lea los comentarios en este archivo
