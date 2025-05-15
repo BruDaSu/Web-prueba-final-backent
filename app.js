@@ -97,5 +97,25 @@ app.post('/submit', async (req, res) => {
         res.status(500).json({message: 'Error al guardar'});
     }
 });
+/**
+ * @swagger
+ * /alumnos:
+ *  get:
+ *      summary: Obtiene todos las personas agendadas
+ *      responses:
+ *          200:
+ *              description: Lista completa de personas agendadas
+ *          400:
+ *              desription: Error al listar 
+ */
+const Person = require('./models/Person');
 
+app.get('/personas', async (req, res) => {
+  try {
+    const listadoPersonas = await Person.find();
+    res.status(200).json(listadoPersonas);
+  } catch (err) {
+    res.status(400).json({ message: 'Error al listar las personas' });
+  }
+});
 app.listen(4610);
