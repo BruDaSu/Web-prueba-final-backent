@@ -59,29 +59,29 @@ mongoose.connect(MONGO_URI)
  *             properties:
  *               dni:
  *                 type: string
- *                 example: "12345678"
+ *                 
  *               celular:
  *                 type: string
- *                 example: "987654321"
+ *                 
  *               nombre:
  *                 type: string
- *                 example: "Juan"
+ *                 
  *               apellidos:
  *                 type: string
- *                 example: "Pérez Gómez"
+ *                 
  *               fechaNacimiento:
  *                 type: string
  *                 format: date
- *                 example: "1995-05-21"
+ *                 
  *               departamento:
  *                 type: string
- *                 example: "Lima"
+ *                 
  *               distrito:
  *                 type: string
- *                 example: "Miraflores"
+ *                 
  *               observaciones:
  *                 type: string
- *                 example: "Paciente con alergias"
+ *                 
  *             required:
  *               - dni
  *               - celular
