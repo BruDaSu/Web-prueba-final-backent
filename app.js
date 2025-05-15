@@ -15,11 +15,10 @@ app.use(cors());
 
 const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI).then(()=>{
-    console.log("Se conecto exitosamente");
-}).catch((err)=>{
-    console.error("Error encontrado", err);
-});
+console.log('MONGO_URI:', MONGO_URI);
+mongoose.connect(MONGO_URI)
+  .then(() => console.log('Mongo conectado'))
+  .catch(err => console.error('Error conectado Mongo', err));
 
 const swaggerOptions = {
     definition: {
