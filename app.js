@@ -1,18 +1,88 @@
+require('dotenv').config();
 const express = require('express');
-const mongosse = require('mongoose');
+const mongoose = require('mongoose');
+const cors = require('cors');
 const Person = require('./models/Person');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
+
 const app = express();
+
 
 app.use(express.static('public'));
 app.use(express.json());
+app.use(cors());
 
-const MONGO_URI = "mongodb+srv://60183377:tZdn51uuhue0cUdO@cluster0.61pnwkw.mongodb.net/ayuda?retryWrites=true&w=majority&appName=Cluster0";
+const MONGO_URI = process.env.MONGO_URI;
 
-mongosse.connect(MONGO_URI).then(()=>{
+mongoose.connect(MONGO_URI).then(()=>{
     console.log("Se conecto exitosamente");
 }).catch((err)=>{
     console.error("Error encontrado", err);
 });
+
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'Agenda de Llamadas',
+            version: '1.0.0',
+            description: 'API para registrar personas en la agenda de llamadas'
+        },
+        servers: [
+            {
+                url: 'http://localhost:4610'
+            }
+        ]
+    },
+    apis: ['./app.js']
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs1', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+
+/**
+ * @swagger
+ * /submit:
+ *   post:
+ *     summary: Registra una nueva persona en la agenda
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               dni:
+ *                 type: string
+ *                 
+ *               celular:
+ *                 type: string
+ *                 
+ *               nombre:
+ *                 type: string
+ *                 
+ *               apellidos:
+ *                 type: string
+ *                 
+ *               fechaNacimiento:
+ *                 type: string
+ *                 
+ *               departamento:
+ *                 type: string
+ *                 
+ *               distrito:
+ *                 type: string
+ *                 
+ *               observaciones:
+ *                 type: string
+ *                 
+ *     responses:
+ *       200:
+ *         description: Persona registrada correctamente
+ *       500:
+ *         description: Error al registrar la persona
+ */
 
 app.post('/submit', async (req, res) => {
     try{
