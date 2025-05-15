@@ -2,54 +2,52 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const swaggerUI = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
 const Person = require('./models/Person');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
 
 const app = express();
 
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'API de Personas',
-            version: '1.0.0',
-            description: 'API para gestionar personas con sus datos'
-        },
-        servers: [
-            {
-                url: 'http://localhost:4610',
-            },
-            {
-                url: 'https://web-prueba-final-backent-production.up.railway.app',
-            }
-        ],
-    },
-    apis: ['./app.js'], // Aquí le dices que lea los comentarios en este archivo
-};
-
-const specs = swaggerJsdoc(swaggerOptions);
-
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
-app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
+app.use(cors());
 
 const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI)
-.then(() => {
-    console.log('Se conectó exitosamente a MongoDB');
-})
-.catch((err) => {
-    console.error('Error encontrado', err);
+mongoose.connect(MONGO_URI).then(() => {
+  console.log("Se conecto exitosamente");
+}).catch((err) => {
+  console.error("Error encontrado", err);
 });
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Agenda de Llamadas',
+      version: '1.0.0',
+      description: 'API para registrar personas en la agenda de llamadas'
+    },
+    servers: [
+      {
+        url: 'https://web-prueba-final-backent-production.up.railway.app'
+      },
+      {
+        url: 'http://localhost:4610'
+      }
+    ]
+  },
+  apis: ['./app.js']
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs1', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 /**
  * @swagger
  * /submit:
  *   post:
- *     summary: Agrega una nueva persona con sus datos completos
+ *     summary: Registra una nueva persona en la agenda
  *     requestBody:
  *       required: true
  *       content:
@@ -59,54 +57,50 @@ mongoose.connect(MONGO_URI)
  *             properties:
  *               dni:
  *                 type: string
- *                 
  *               celular:
  *                 type: string
- *                 
  *               nombre:
  *                 type: string
- *                 
  *               apellidos:
  *                 type: string
- *                 
  *               fechaNacimiento:
  *                 type: string
- *                 format: date
- *                 
  *               departamento:
  *                 type: string
- *                 
  *               distrito:
  *                 type: string
- *                 
  *               observaciones:
  *                 type: string
- *                 
- *             required:
- *               - dni
- *               - celular
- *               - nombre
- *               - apellidos
- *               - fechaNacimiento
- *               - departamento
- *               - distrito
  *     responses:
  *       200:
- *         description: Persona guardada correctamente
+ *         description: Persona registrada correctamente
  *       500:
- *         description: Error al guardar persona
+ *         description: Error al registrar la persona
  */
 app.post('/submit', async (req, res) => {
-    try {
-        const person = new Person(req.body);
-        await person.save();
-        res.status(200).json({ message: 'Se guardó correctamente' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Error al guardar' });
-    }
+  try {
+    const person = new Person(req.body);
+    await person.save();
+    res.status(200).json({ message: 'Se guardo correctamente' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al guardar' });
+  }
 });
 
-app.listen(4610, () => {
-    console.log('Servidor corriendo en el puerto 4610');
+app.get('/persons', async (req, res) => {
+  try {
+    const persons = await Person.find();
+    res.status(200).json(persons);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error al obtener las personas' });
+  }
+});
+
+// Usar variable de entorno PORT o 4610 por defecto
+const PORT = process.env.PORT || 4610;
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
 });
